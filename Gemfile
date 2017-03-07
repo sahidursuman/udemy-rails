@@ -61,4 +61,5 @@ gem 'bootstrap-sass', '~> 3.3.6'
 gem 'devise'
 
 gem 'toastr-rails'
-# toastr.info('Are you the 6 fingered man?')
+
+gem 'omniauth-facebook'
