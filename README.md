@@ -22,3 +22,11 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+# heroku commands
+
+* heroku login
+* heroku create
+* git push heroku master
+* heroku run rake db:migrate
+* heroku open
