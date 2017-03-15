@@ -11,9 +11,9 @@
 // about supported directives.
 //
 //= require jquery
+//= require dropzone
 //= require jquery_ujs
 //= require turbolinks
 //= require bootstrap-sprockets
 //= require toastr
 //= require_tree .
-
