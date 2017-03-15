@@ -9,6 +9,8 @@ class ListingsController < ApplicationController
   end
 
   def new
+    # 現在のユーザーのりステイングの作成
+    @listing = current_user.listings.build
   end
 
   def create
