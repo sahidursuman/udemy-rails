@@ -31,7 +31,7 @@ class ListingsController < ApplicationController
 
   def update
     if @listing.update(listing_params)
-      redirect_to :back, notice: "更新できました" 
+      redirect_to :back, notice: "更新できました"
     end
 
   end
@@ -50,6 +50,7 @@ class ListingsController < ApplicationController
   end
 
   def photos
+    @photo = Photo.new
   end
 
   def calendar
