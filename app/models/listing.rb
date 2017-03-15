@@ -1,5 +1,6 @@
 class Listing < ApplicationRecord
   belongs_to :user
+  has_many :photos
 
   # means required
   validates :home_type, presence: true
