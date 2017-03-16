@@ -69,6 +69,7 @@ gem "figaro"
 gem 'geocoder'
 gem 'jquery-ui-rails'
 gem 'stripe'
+gem 'rest-client'
 
 group :development do
   gem 'sqlite3'

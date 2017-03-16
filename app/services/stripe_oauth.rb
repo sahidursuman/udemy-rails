@@ -23,6 +23,10 @@ class StripeOauth < Struct.new( :user )
       # On the other hand, if the request failed, then
       # we can't send them to connect.
       json = JSON.parse(e.response.body) rescue nil
+
+      Rails.logger.info json
+
+
       if json && json['error']
         case json['error']
 
@@ -58,7 +62,7 @@ class StripeOauth < Struct.new( :user )
   def verify!( code )
     data = client.get_token( code, {
       headers: {
-        'Authorization' => "Bearer #{Rails.application.secrets.stripe_secret_key}"
+        'Authorization' => "Bearer #{Stripe.api_key}"
       }
       } )
 
@@ -76,9 +80,9 @@ class StripeOauth < Struct.new( :user )
     def deauthorize!
       response = RestClient.post(
       'https://connect.stripe.com/oauth/deauthorize',
-      { client_id: Rails.application.secrets.stripe_client_id,
+      { client_id: Rails.configuration.stripe[:client_id],
         stripe_user_id: user.stripe_user_id },
-        { 'Authorization' => "Bearer #{Rails.application.secrets.stripe_secret_key}" }
+        { 'Authorization' => "Bearer #{Stripe.api_key}" }
         )
         user_id = JSON.parse( response.body )['stripe_user_id']
 
@@ -111,8 +115,8 @@ class StripeOauth < Struct.new( :user )
       # Used in #oauth_url and #verify!
       def client
         @client ||= OAuth2::Client.new(
-        Rails.application.secrets.stripe_client_id,
-        Rails.application.secrets.stripe_secret_key,
+        Rails.configuration.stripe[:client_id],
+        Stripe.api_key,
         {
           site: 'https://connect.stripe.com',
           authorize_url: '/oauth/authorize',
