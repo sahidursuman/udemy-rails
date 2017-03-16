@@ -26,16 +26,16 @@ class StripeOauth < Struct.new( :user )
       if json && json['error']
         case json['error']
 
-        # The application is configured incorrectly and
-        # does not have the right Redirect URI
+          # The application is configured incorrectly and
+          # does not have the right Redirect URI
         when 'invalid_redirect_uri'
           return nil, <<-EOF
-            Redirect URI is not setup correctly.
-            Please see the <a href='#{Rails.configuration.github_url}/blob/master/README.markdown' target='_blank'>README</a>.
+          Redirect URI is not setup correctly.
+          Please see the <a href='#{Rails.configuration.github_url}/blob/master/README.markdown' target='_blank'>README</a>.
           EOF
 
-        # Something else horrible happened? Network is down,
-        # Stripe API is broken?...
+          # Something else horrible happened? Network is down,
+          # Stripe API is broken?...
         else
           return [ nil, params[:error_description] ]
 
@@ -60,65 +60,65 @@ class StripeOauth < Struct.new( :user )
       headers: {
         'Authorization' => "Bearer #{Rails.application.secrets.stripe_secret_key}"
       }
-    } )
+      } )
 
-    user.stripe_user_id = data.params['stripe_user_id']
-    user.stripe_account_type = 'oauth'
-    user.publishable_key = data.params['stripe_publishable_key']
-    user.secret_key = data.token
-    user.currency = default_currency
+      user.stripe_user_id = data.params['stripe_user_id']
+      user.stripe_account_type = 'oauth'
+      user.publishable_key = data.params['stripe_publishable_key']
+      user.secret_key = data.token
+      user.currency = default_currency
 
-    user.save!
-  end
+      user.save!
+    end
 
-  # Deauthorize the user. Straight-forward enough.
-  # See app/controllers/users_controller.rb#deauthorize for counterpart.
-  def deauthorize!
-    response = RestClient.post(
+    # Deauthorize the user. Straight-forward enough.
+    # See app/controllers/users_controller.rb#deauthorize for counterpart.
+    def deauthorize!
+      response = RestClient.post(
       'https://connect.stripe.com/oauth/deauthorize',
       { client_id: Rails.application.secrets.stripe_client_id,
         stripe_user_id: user.stripe_user_id },
-      { 'Authorization' => "Bearer #{Rails.application.secrets.stripe_secret_key}" }
-    )
-    user_id = JSON.parse( response.body )['stripe_user_id']
+        { 'Authorization' => "Bearer #{Rails.application.secrets.stripe_secret_key}" }
+        )
+        user_id = JSON.parse( response.body )['stripe_user_id']
 
-    deauthorized if response.code == 200 && user_id == user.stripe_user_id
-  end
+        deauthorized if response.code == 200 && user_id == user.stripe_user_id
+      end
 
-  # The actual deauthorization on our side consists
-  # of 'forgetting' the now-invalid user_id, API keys, etc.
-  # Used here in #deauthorize! as well as in the webhook handler:
-  # app/controllers/hooks_controller.rb#stripe
-  def deauthorized
-    user.update_attributes(
-      stripe_user_id: nil,
-      secret_key: nil,
-      publishable_key: nil,
-      currency: nil
-    )
-  end
+      # The actual deauthorization on our side consists
+      # of 'forgetting' the now-invalid user_id, API keys, etc.
+      # Used here in #deauthorize! as well as in the webhook handler:
+      # app/controllers/hooks_controller.rb#stripe
+      def deauthorized
+        user.update_attributes(
+        stripe_user_id: nil,
+        secret_key: nil,
+        publishable_key: nil,
+        currency: nil
+        )
+      end
 
-  private
+      private
 
-  # Get the default currency of the connected user.
-  # All transactions will use this currency.
-  def default_currency
-    Stripe::Account.retrieve( user.stripe_user_id, user.secret_key ).default_currency
-  end
+      # Get the default currency of the connected user.
+      # All transactions will use this currency.
+      def default_currency
+        Stripe::Account.retrieve( user.stripe_user_id, user.secret_key ).default_currency
+      end
 
-  # A simple OAuth2 client we can use to generate a URL
-  # to redirect the user to as well as get an access token.
-  # Used in #oauth_url and #verify!
-  def client
-    @client ||= OAuth2::Client.new(
-      Rails.application.secrets.stripe_client_id,
-      Rails.application.secrets.stripe_secret_key,
-      {
-        site: 'https://connect.stripe.com',
-        authorize_url: '/oauth/authorize',
-        token_url: '/oauth/token'
-      }
-    ).auth_code
-  end
+      # A simple OAuth2 client we can use to generate a URL
+      # to redirect the user to as well as get an access token.
+      # Used in #oauth_url and #verify!
+      def client
+        @client ||= OAuth2::Client.new(
+        Rails.application.secrets.stripe_client_id,
+        Rails.application.secrets.stripe_secret_key,
+        {
+          site: 'https://connect.stripe.com',
+          authorize_url: '/oauth/authorize',
+          token_url: '/oauth/token'
+        }
+        ).auth_code
+      end
 
-end
+    end
