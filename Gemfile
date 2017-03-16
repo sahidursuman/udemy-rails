@@ -68,6 +68,7 @@ gem 'dropzonejs-rails'
 gem "figaro"
 gem 'geocoder'
 gem 'jquery-ui-rails'
+gem 'stripe'
 
 group :development do
   gem 'sqlite3'
