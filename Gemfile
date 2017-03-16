@@ -67,6 +67,7 @@ gem 'aws-sdk', '~> 2'
 gem 'dropzonejs-rails'
 gem "figaro"
 gem 'geocoder'
+gem 'jquery-ui-rails'
 
 group :development do
   gem 'sqlite3'
