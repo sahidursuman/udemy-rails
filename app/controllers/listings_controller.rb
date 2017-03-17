@@ -1,6 +1,7 @@
 class ListingsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_listing, only: [:show, :update, :basics, :description, :address, :price, :photos, :calendar, :bankaccount, :publish]
+  before_action :access_denied, only: [:basics, :description, :address, :price, :photos, :calendar, :bankaccount, :publish]
 
 
   def index
@@ -39,6 +40,7 @@ class ListingsController < ApplicationController
   end
 
   def basics
+
   end
 
   def description
@@ -73,6 +75,12 @@ class ListingsController < ApplicationController
 
   def set_listing
     @listing = Listing.find(params[:id])
+  end
+
+  def access_denied
+    if !(current_user == @listing.user)
+      redirect_to root_path, notice: "他人の編集ページにはアクセスできません"
+    end
   end
 
 
