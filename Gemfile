@@ -70,7 +70,8 @@ gem 'geocoder'
 gem 'jquery-ui-rails'
 gem 'stripe'
 gem 'rest-client'
-gem 'open_uri_redirections'
+gem "private_pub"
+gem "thin"
 
 group :development do
   gem 'sqlite3'
