@@ -84,8 +84,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  # TODO: remember to change localhost to actual host
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_mailer.default_url_options = { host: 'boiling-ocean-60058.herokuapp.com', port: 80 }
 
   config.paperclip_defaults = {
     storage: :s3,
