@@ -66,7 +66,7 @@ class ReservationsController < ApplicationController
       begin
         charge_attrs = {
           amount: amount,
-          currency: user.currency,
+          currency: user.currency || 'jpy',
           source: params[:token],
           description: "Test Charge via Stripe Connect"
         }
