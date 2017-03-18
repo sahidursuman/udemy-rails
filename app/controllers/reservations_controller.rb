@@ -24,7 +24,7 @@ class ReservationsController < ApplicationController
     # 自分で自分の部屋を予約する場合(カレンダーでの予約作成)
     if current_user == @listing.user
       #選択されてた日付 ","で区切って配列化
-      selectedDates = params[:reservation][:selectedDates].split(",")
+      selectedDates = params[:reservation][:selectedDates] ? params[:reservation][:selectedDates].split(",") : []
 
       # 今まで、自分自身で予約した予約を取り出す
       reservationsByme = @listing.reservations.where(user_id: current_user.id)
@@ -46,7 +46,6 @@ class ReservationsController < ApplicationController
       end
 
       #新しい日付の予約をクリエイトする
-      selectedDates
       if selectedDates
         selectedDates.each do |date|
           current_user.reservations.create(:listing_id => @listing.id,:start_date => date,:end_date => date, :self_booking => true)
