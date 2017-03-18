@@ -6,6 +6,8 @@ class PagesController < ApplicationController
   def search
     if params[:search].present?
 
+      session[:address] = params[:search]
+
       if params[:lat].present? & params[:lng].present?
         @latitude = params[:lat]
         @longitude = params[:lng]
@@ -115,6 +117,10 @@ class PagesController < ApplicationController
     # まずajaxで送られてきた緯度経度をセッションに入れる
     if !params[:geolocation].blank?
       geolocation = params[:geolocation]
+    end
+
+    if !params[:location].blank?
+      session[:address] = params[:location]
     end
 
     @listings = Listing.where(active: true).near(geolocation, 1, order: 'distance')

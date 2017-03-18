@@ -122,7 +122,7 @@ function initMap() {
       $.ajax({
         url: '/ajaxsearch',
         // this data is data for sending to url
-        data: {'geolocation': geolocation}
+        data: {'geolocation': geolocation, 'location': location}
       });
 
     });
