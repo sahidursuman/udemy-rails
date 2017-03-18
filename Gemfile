@@ -72,6 +72,7 @@ gem 'stripe'
 gem 'rest-client'
 gem "private_pub"
 gem "thin"
+gem 'ransack'
 
 group :development do
   gem 'sqlite3'
