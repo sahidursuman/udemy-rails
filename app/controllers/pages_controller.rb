@@ -36,6 +36,9 @@ class PagesController < ApplicationController
       start_date = Date.parse(params[:start_date])
       end_date = Date.parse(params[:end_date])
 
+      session[:start_date] = start_date
+      session[:end_date] = end_date
+
       @listings.each do |listing|
 
         # check the listing is availble between start_date to end_date
@@ -69,10 +72,11 @@ class PagesController < ApplicationController
     @arrlistings = @listings.to_a
 
     # start_date end_dateの間に予約がないことを確認.あれば削除
-    if ( !params[:start_date].blank? && !params[:end_date].blank? )
+    if ( !session[:start_date].blank? && !session[:end_date].blank? )
 
-      start_date = Date.parse(params[:start_date])
-      end_date = Date.parse(params[:end_date])
+      start_date = session[:start_date]
+      end_date = session[:end_date]
+
 
       @listings.each do |listing|
 
